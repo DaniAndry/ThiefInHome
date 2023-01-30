@@ -10,7 +10,7 @@ public class Alarm : MonoBehaviour
     private WaitForSeconds _waitSeconds = new WaitForSeconds(0.01f);
     private Coroutine _coroutine;
 
-    public void AlarmOn()
+    public void On()
     {
         _audioSource.Play();
 
@@ -22,7 +22,7 @@ public class Alarm : MonoBehaviour
         _coroutine = StartCoroutine(IncreaseVolume());
     }
 
-    public void AlarmOff()
+    public void Off()
     {
         if (_coroutine != null)
         {
@@ -41,8 +41,6 @@ public class Alarm : MonoBehaviour
             _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _maxSoundValue, Time.deltaTime);
             yield return _waitSeconds;
         }
-
-        StopCoroutine(_coroutine);
     }
 
     private IEnumerator DecreaseVolume()
@@ -53,7 +51,6 @@ public class Alarm : MonoBehaviour
             yield return _waitSeconds;
         }
 
-        StopCoroutine(_coroutine);
         _audioSource.Stop();
     }
 }
