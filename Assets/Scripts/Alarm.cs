@@ -10,35 +10,34 @@ public class Alarm : MonoBehaviour
     private int _maxSoundValue = 1;
     private WaitForSeconds _waitSeconds = new WaitForSeconds(0.01f);
     private Coroutine _coroutine;
+    private int _targetVolume;
 
-    public void Breaker(bool isInside)
+    public void Control(bool isInside)
     {
         if (_coroutine != null)
         {
             StopCoroutine(_coroutine);
         }
 
-        _coroutine = StartCoroutine(ChangeVolume(isInside));
-    }
-
-    private IEnumerator ChangeVolume(bool isInside)
-    {
-        int targetVolume;
-
         if (isInside)
         {
             _audioSource.volume = 0;
             _audioSource.Play();
-            targetVolume = _maxSoundValue;
+            _targetVolume = _maxSoundValue;
         }
         else
         {
-            targetVolume = _minSoundValue;
+            _targetVolume = _minSoundValue;
         }
 
-        while (_audioSource.volume != targetVolume)
+        _coroutine = StartCoroutine(ChangeVolume());
+    }
+
+    private IEnumerator ChangeVolume()
+    {
+        while (_audioSource.volume != _targetVolume)
         {
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, Time.deltaTime);
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, _targetVolume, Time.deltaTime);
             yield return _waitSeconds;
         }
     }
